@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\EventResource;
 use Illuminate\Http\Request;
 use \App\Models\Event;
 
@@ -12,8 +13,12 @@ class EventController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    { //laravel is smart enough to know what kind of response to return it will send in json
-        return Event::all();
+    { //we will modify the index action so the resource class can be used both to return a collection of specific resources where every element on this collection will be converted using this toarray() method or just one single resource
+
+        // now you would use this resource class for collection by typing the event resource,it has a static collection method to which you will just pass an array of resources which is a result of Event::all()
+        return EventResource::collection(Event::all());
+        // api resources allow you to have more fields to add some kind to meta fields
+        //note: yo garda data haru json bhane field ma wrap hunxa { "data":[] }
     }
 
     /**
@@ -31,15 +36,15 @@ class EventController extends Controller
             'user_id' => 1
         ]);
 
-        return $event;
+        return new EventResource($event);
     }
 
     /**
      * Display the specified resource.
      */
     public function show(Event $event)
-    {
-        return $event;
+    { // to return single request you would use this event resource,but this time creating a new instance of it
+        return new EventResource($event);
     }
 
     /**
@@ -60,7 +65,7 @@ class EventController extends Controller
             'user_id' => 1
         ]);
 
-        return $event;
+        return new EventResource($event);
 
 
     }

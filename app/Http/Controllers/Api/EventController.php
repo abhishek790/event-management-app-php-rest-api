@@ -16,7 +16,7 @@ class EventController extends Controller
     { //we will modify the index action so the resource class can be used both to return a collection of specific resources where every element on this collection will be converted using this toarray() method or just one single resource
 
         // now you would use this resource class for collection by typing the event resource,it has a static collection method to which you will just pass an array of resources which is a result of Event::all()
-        return EventResource::collection(Event::all());
+        return EventResource::collection(Event::with('user', 'attendees')->get());
         // api resources allow you to have more fields to add some kind to meta fields
         //note: yo garda data haru json bhane field ma wrap hunxa { "data":[] }
     }
@@ -44,6 +44,8 @@ class EventController extends Controller
      */
     public function show(Event $event)
     { // to return single request you would use this event resource,but this time creating a new instance of it
+        // if you already have event then you can do this to load user
+        $event->load('user', 'attendees');
         return new EventResource($event);
     }
 

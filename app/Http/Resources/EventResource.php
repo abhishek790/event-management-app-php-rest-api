@@ -4,6 +4,8 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\UserResource;
+use App\Http\Resources\AttendeeResource;
 
 class EventResource extends JsonResource
 {
@@ -27,6 +29,13 @@ class EventResource extends JsonResource
             'end_time' => $this->end_time,
 
             // every event has this user_id column which points to the owner of a specific event(organizer), so you when getting all the events you might want to display also the organizer name, if you have 100 or 200 events returned at once, that would be inefficient to fetch all the events and then try to make let's say 100 request for every single user just to display the organizer of the event, so we can build some nested resources inside such event resource by conditionally loading the user
+
+            // we add an optional field called user, but we won't be passing the user that's associated with this event instead we will use the magical method of the resource called whenloaded() and pass the name of the relationship(it is between Event model and User model)
+            // what happens here is the user property would only be present on the response if this user relationship of particular event is loaded for eg: EventResource::collection(Event::with('user')->get());
+            'user' => new UserResource($this->whenLoaded('user')),
+            'attendee' => AttendeeResource::collection(
+                $this->whenLoaded('attendees')
+            )
 
         ];
 

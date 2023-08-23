@@ -7,6 +7,10 @@ use App\Http\Resources\EventResource;
 use Illuminate\Http\Request;
 use \App\Models\Event;
 
+// optionally loading some of the relations and other not 
+//so to achieve this we'll be including relationships optionally by just passing a query parameter to the URL 
+//  eg: {{BASE_RUL}}events?include=user,attendees,attendees.user
+// so how can we  parse this include parameter to change it into an array and then how can we use this array of relationships to load specific relationships on demand
 class EventController extends Controller
 {
 
@@ -14,6 +18,7 @@ class EventController extends Controller
     {
         return EventResource::collection(Event::with('user', 'attendees')->paginate());
 
+        // we will be doing the work inside the index method but we can also add a helper method
     }
 
 

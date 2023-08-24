@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Event extends Model
-{
+{ // this trait 
     use HasFactory;
-    //  we also have to set the user ID as we are setting it, using the mass assignment
+
     protected $fillable = ['name', 'description', 'start_time', 'end_time', 'user_id'];
     public function user(): BelongsTo
     {

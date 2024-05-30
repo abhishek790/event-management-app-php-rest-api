@@ -13,6 +13,14 @@ class EventController extends Controller
 {
     use CanLoadRelationship;
 
+    // SELECTIVELY APPLYING AUTH MIDDLEWARE
+    // best way to selectively apply auth middleware would be to do that inside the controller constructor
+
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum')->except(['index', 'show']);
+    }
+
 
     private array $relations = ['user', 'attendees', 'attendees.user'];
 
@@ -39,7 +47,7 @@ class EventController extends Controller
                 'start_time' => 'required|date',
                 'end_time' => 'required|date|after:start_time'
             ]),
-            'user_id' => 1
+            'user_id' => $request->user()->id
         ]);
 
         return new EventResource($this->loadRelationship($event));
@@ -65,7 +73,7 @@ class EventController extends Controller
                 'start_time' => 'sometimes|date',
                 'end_time' => 'sometimes|date|after:start_time'
             ]),
-            'user_id' => 1
+            'user_id' => $request->user()->id
         ]);
 
         return new EventResource($this->loadRelationship($event));

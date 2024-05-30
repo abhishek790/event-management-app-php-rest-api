@@ -2,7 +2,8 @@
 
 namespace App\Providers;
 
-// use Illuminate\Support\Facades\Gate;
+use App\Models\Event;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -19,8 +20,13 @@ class AuthServiceProvider extends ServiceProvider
     /**
      * Register any authentication / authorization services.
      */
+
+    //  this method is only called once when laravel starts
     public function boot(): void
     {
-        //
+        // while using this gate, it is certain that user is authenticated as we have added that auth in EventController ,which is why $user model is not checked whether it is null or not
+        Gate::define('update-event', function ($user, Event $event) {
+            return $user->id === $event->user_id;
+        });
     }
 }

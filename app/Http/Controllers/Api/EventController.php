@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\EventResource;
 use App\Http\Traits\CanLoadRelationship;
@@ -63,7 +64,10 @@ class EventController extends Controller
 
     public function update(Request $request, Event $event)
     {
-
+        if (Gate::denies('update-event', $event)) {
+            // this status code is used when user is authenticated but doesnot have permission to perform this action
+            abort(403, 'You are not authrozied to update this event');
+        }
 
         $event->update([
             ...$request->validate([

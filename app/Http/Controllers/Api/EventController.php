@@ -17,10 +17,8 @@ class EventController extends Controller
     public function __construct()
     {
         $this->middleware('auth:sanctum')->except(['index', 'show']);
-        //Using policy based authorization
-        // inside the controller call the authorizeResource() specifying the resource class which is event model and second argument is the parameter name on the route which is event in our case
         $this->authorizeResource(Event::class, 'event');
-        //so this will magically make sure that every method form the policy will be called before a specific action
+
     }
 
 
@@ -78,3 +76,9 @@ class EventController extends Controller
         return response(status: 204);
     }
 }
+
+//building system that will remind attendees that the event they are going to attend is less than 24 hours away
+// customs artison command
+// task scheduling
+// notification/emails
+// queues

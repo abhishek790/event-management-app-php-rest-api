@@ -14,12 +14,13 @@ class EventController extends Controller
 {
     use CanLoadRelationship;
 
-    // SELECTIVELY APPLYING AUTH MIDDLEWARE
-    // best way to selectively apply auth middleware would be to do that inside the controller constructor
-
     public function __construct()
     {
         $this->middleware('auth:sanctum')->except(['index', 'show']);
+        //Using policy based authorization
+        // inside the controller call the authorizeResource() specifying the resource class which is event model and second argument is the parameter name on the route which is event in our case
+        $this->authorizeResource(Event::class, 'event');
+        //so this will magically make sure that every method form the policy will be called before a specific action
     }
 
 
@@ -27,16 +28,11 @@ class EventController extends Controller
 
     public function index()
     {
-
-
         $query = $this->loadRelationship(Event::query());
 
         return EventResource::collection(
             $query->latest()->paginate()
         );
-
-
-
     }
 
     public function store(Request $request)
@@ -53,22 +49,15 @@ class EventController extends Controller
 
         return new EventResource($this->loadRelationship($event));
     }
-
-
     public function show(Event $event)
     {
-
         return new EventResource($this->loadRelationship($event));
     }
 
-
     public function update(Request $request, Event $event)
     {
-        if (Gate::denies('update-event', $event)) {
-            // this status code is used when user is authenticated but doesnot have permission to perform this action
-            abort(403, 'You are not authrozied to update this event');
-        }
 
+        // $this->authorize('update-event', $event);
         $event->update([
             ...$request->validate([
 
@@ -79,10 +68,7 @@ class EventController extends Controller
             ]),
             'user_id' => $request->user()->id
         ]);
-
         return new EventResource($this->loadRelationship($event));
-
-
     }
 
 

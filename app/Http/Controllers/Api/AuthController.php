@@ -38,10 +38,10 @@ class AuthController extends Controller
         ]);
     }
 
-    // user has to be first signed to logout so it needs auth-sanctum middleware
+
     public function logout(Request $request)
     {
-        //deletes  the tokens of the specific user form the personal_access_token table which are used to authenticate user
+
         $request->user()->tokens()->delete();
 
         return response()->json([

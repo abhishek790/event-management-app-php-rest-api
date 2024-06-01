@@ -8,7 +8,8 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use App\Models\Event;
 
-class EventReminderNotification extends Notification
+
+class EventReminderNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -27,7 +28,7 @@ class EventReminderNotification extends Notification
      *
      * @return array<int, string>
      */
-    // defines all the channels on which this notification should be delivered
+
     public function via(object $notifiable): array
     {
         return ['mail'];
@@ -36,7 +37,7 @@ class EventReminderNotification extends Notification
     /**
      * Get the mail representation of the notification.
      */
-    // this represents email representation of the notification.
+
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
@@ -50,7 +51,7 @@ class EventReminderNotification extends Notification
      *
      * @return array<string, mixed>
      */
-    // it stores some important information about this notification in our database
+
     public function toArray(object $notifiable): array
     {
         return [

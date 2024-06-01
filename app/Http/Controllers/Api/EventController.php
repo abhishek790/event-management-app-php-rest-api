@@ -17,6 +17,7 @@ class EventController extends Controller
     public function __construct()
     {
         $this->middleware('auth:sanctum')->except(['index', 'show']);
+        $this->middleware('throttle:60,1')->only(['store', 'update', 'destroy']);
         $this->authorizeResource(Event::class, 'event');
 
     }
@@ -80,5 +81,9 @@ class EventController extends Controller
 //building system that will remind attendees that the event they are going to attend is less than 24 hours away
 // customs artison command
 // task scheduling
-// notification/emails=>So notifications are basically simple classes that have some minimum amount of information that you would like to send to users on different channels like email,sms,text messages,slack notification channels or you can create your custom own notification channels.
-// queues
+// notification/emails
+// queues=> it allows you to defer some time consuming tasks to run in the background and this general will increase you application performance and the user experience.
+// form some time consuming task you assign laravel to do it later and then a separate process running on the server called the queue worker wll just pick up tasks that are stored in different storages like(redis) and then it will execute in the background
+
+// create a table to hold the queue jobs
+// php artisan queue:table => after this run php artisan migrate

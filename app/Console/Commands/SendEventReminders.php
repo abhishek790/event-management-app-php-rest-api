@@ -42,7 +42,7 @@ class SendEventReminders extends Command
         $this->info("Found $eventCount $eventLabel.");
         $events->each(
             fn($event) => $event->attendees
-                ->each(  // inside user model there is triat notifiable form there we can use this notify method
+                ->each(
                     fn($attendee) => $attendee->user->notify(
                         new EventReminderNotification($event)
                     )
@@ -52,3 +52,5 @@ class SendEventReminders extends Command
         $this->info('Reminder notification sent successfully');
     }
 }
+
+// there needs to separate process running on your server that go to the database pickup those jobs to be run and execute them one by one, so this means we have to run some additional command that needs to be constantly working and it needs to grab those items from the queue and execute them as they come in those item, for that you need to run [php artisan queue:work] this command runs all the time next to your actual web server

@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Notifications\EventReminderNotification;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use App\Models\Event;
@@ -13,7 +14,7 @@ class SendEventReminders extends Command
      *
      * @var string
      */
-    // this is signature comes after php artisan (here you write you signature)
+
     protected $signature = 'app:send-event-reminders';
 
     /**
@@ -22,31 +23,29 @@ class SendEventReminders extends Command
      * @var string
      */
 
-    //  this will display in list of command when you write php aritsan
+
     protected $description = 'Sends notification to all event attendees, that event starts soons';
 
     /**
      * Execute the console command.
      */
-    // logic is implemented here when this command is executed
+
     public function handle()
     {
         $events = Event::with('attendees.user')
             ->whereBetween('start_time', [now(), now()->addDay()])
             ->get();
 
-
-        //  returns how many events are found
-// since $events is a collection which is just a wrapper on top of array,which enables adding some method to it
         $eventCount = $events->count();
         $eventLabel = Str::plural('event', $eventCount);
 
         $this->info("Found $eventCount $eventLabel.");
-
         $events->each(
             fn($event) => $event->attendees
-                ->each(
-                    fn($attendee) => $this->info("Notifying the user {$attendee->user->id}")
+                ->each(  // inside user model there is triat notifiable form there we can use this notify method
+                    fn($attendee) => $attendee->user->notify(
+                        new EventReminderNotification($event)
+                    )
                 )
         );
 

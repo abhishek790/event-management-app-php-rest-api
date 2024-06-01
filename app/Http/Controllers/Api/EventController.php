@@ -80,5 +80,5 @@ class EventController extends Controller
 //building system that will remind attendees that the event they are going to attend is less than 24 hours away
 // customs artison command
 // task scheduling
-// notification/emails
+// notification/emails=>So notifications are basically simple classes that have some minimum amount of information that you would like to send to users on different channels like email,sms,text messages,slack notification channels or you can create your custom own notification channels.
 // queues

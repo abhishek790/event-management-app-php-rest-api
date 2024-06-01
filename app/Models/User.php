@@ -29,7 +29,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
 
-    //  postman will not display all the properties of a user because by default user model has this hidden protected property which excludes some of the properties from the default serialization mechanism of laravel which basically means converting the data to an array or to json and below 2 data will be excluded
+
     protected $hidden = [
         'password',
         'remember_token',
